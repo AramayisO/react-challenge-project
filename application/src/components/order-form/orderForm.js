@@ -5,6 +5,7 @@ import { SERVER_IP } from '../../private';
 import './orderForm.css';
 
 const ADD_ORDER_URL = `${SERVER_IP}/api/add-order`
+const EDIT_ORDER_URL = `${SERVER_IP}/api/edit-order`
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
@@ -13,9 +14,12 @@ const mapStateToProps = (state) => ({
 class OrderForm extends Component {
     constructor(props) {
         super(props);
+
+        const { order } = this.props.location;
+
         this.state = {
-            order_item: "",
-            quantity: "1"
+            order_item: order ? order.order_item : "",
+            quantity: order ? order.quantity : 1
         }
     }
 
@@ -30,13 +34,22 @@ class OrderForm extends Component {
     submitOrder(event) {
         event.preventDefault();
         if (this.state.order_item === "") return;
-        fetch(ADD_ORDER_URL, {
+
+        const { order } = this.props.location;
+        const API_URL = order ? EDIT_ORDER_URL : ADD_ORDER_URL;
+        const orderDetails = {
+            order_item: this.state.order_item,
+            quantity: this.state.quantity,
+            ordered_by: this.props.auth.email || 'Unknown!'
+        };
+
+        if (order) {
+            orderDetails.id = order._id;
+        }
+
+        fetch(API_URL, {
             method: 'POST',
-            body: JSON.stringify({
-                order_item: this.state.order_item,
-                quantity: this.state.quantity,
-                ordered_by: this.props.auth.email || 'Unknown!',
-            }),
+            body: JSON.stringify(orderDetails),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -47,6 +60,9 @@ class OrderForm extends Component {
     }
 
     render() {
+
+        const { order } = this.props.location;
+
         return (
             <Template>
                 <div className="form-wrapper">
@@ -72,7 +88,13 @@ class OrderForm extends Component {
                             <option value="5">5</option>
                             <option value="6">6</option>
                         </select>
-                        <button type="button" className="order-btn" onClick={(event) => this.submitOrder(event)}>Order It!</button>
+                        <button 
+                            type="button" 
+                            className="order-btn" 
+                            onClick={(event) => this.submitOrder(event)}
+                        >
+                            { order ? 'Update Order' : 'Order It!' }
+                        </button>
                     </form>
                 </div>
             </Template>
