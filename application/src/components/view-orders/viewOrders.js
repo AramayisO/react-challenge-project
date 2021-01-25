@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Template } from '../../components';
 import { SERVER_IP } from '../../private';
 import './viewOrders.css';
@@ -55,7 +56,9 @@ class ViewOrders extends Component {
                                     <p>Quantity: {order.quantity}</p>
                                  </div>
                                  <div className="col-md-4 view-order-right-col">
-                                     <button className="btn btn-success">Edit</button>
+                                    <Link to={{pathname: '/order', order}}>
+                                        <button className="btn btn-success">Edit</button>
+                                    </Link>
                                     <button className="btn btn-danger" onClick={() => this.deleteOrder(order._id)}>Delete</button>
                                  </div>
                             </div>
