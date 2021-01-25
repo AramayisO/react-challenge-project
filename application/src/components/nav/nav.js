@@ -23,7 +23,7 @@ const Nav = (props) => {
                     <label className="nav-label">View Orders</label>
                 </div>
             </Link>
-            <Link to={"/login"} className="nav-link" onClick={(e) => props.commenceLogout()}>
+            <Link to={"/"} className="nav-link" onClick={(e) => props.commenceLogout()}>
                 <div className="nav-link-style">
                     <label className="nav-label">Log Out</label>
                 </div>
